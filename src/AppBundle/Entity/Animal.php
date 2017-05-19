@@ -39,6 +39,13 @@ class Animal
     private $appointments;
 
     /**
+     * @ORM\ManyToOne(targetEntity="Species", inversedBy="animals")
+     *
+     * @var Species
+     */
+    private $species;
+
+    /**
      * Construct.
      */
     public function __construct()
@@ -120,5 +127,31 @@ class Animal
     public function getAppointments()
     {
         return $this->appointments;
+    }
+
+    /**
+     * Set the species.
+     *
+     * @param Species $species
+     *
+     * @return Animal
+     */
+    public function setSpecies(Species $species)
+    {
+        if ($this->species !== $species) {
+            $this->species = $species;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Get the species.
+     *
+     * @return Species
+     */
+    public function getSpecies()
+    {
+        return $this->species;
     }
 }

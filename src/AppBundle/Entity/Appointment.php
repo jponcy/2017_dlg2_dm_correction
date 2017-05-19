@@ -50,6 +50,13 @@ class Appointment
     private $animal;
 
     /**
+     * @ORM\ManyToOne(targetEntity="Disease", inversedBy="appointments")
+     *
+     * @var Disease
+     */
+    private $disease;
+
+    /**
      * Get id
      *
      * @return integer
@@ -152,5 +159,31 @@ class Appointment
     public function getAnimal()
     {
         return $this->animal;
+    }
+
+    /**
+     * Set the disease.
+     *
+     * @param Disease $disease
+     *
+     * @return Appointment
+     */
+    public function setDisease(Disease $disease)
+    {
+        if ($this->disease !== $disease) {
+            $this->disease = $disease;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Get the disease.
+     *
+     * @return Disease
+     */
+    public function getDisease()
+    {
+        return $this->disease;
     }
 }
