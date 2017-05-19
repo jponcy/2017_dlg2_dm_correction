@@ -1,8 +1,9 @@
 <?php
-
 namespace AppBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use AppBundle\Entity\Animal;
+use Doctrine\ORM\QueryBuilder;
 
 /**
  * AnimalRepository
@@ -12,4 +13,110 @@ use Doctrine\ORM\EntityRepository;
  */
 class AnimalRepository extends EntityRepository
 {
+
+    /**
+     */
+    public function findSomeByName(string $name, int $limit = 5)
+    {
+        return $this->findBy([
+            'name' => $name
+        ], [
+            'id' => 'DESC'
+        ], $limit);
+    }
+
+    /**
+     */
+    public function findDQL(string $name)
+    {
+        $this->getEntityManager()
+            ->createQuery('SELECT a FROM AppBundle:Animal a WHERE a.id>5000 AND a.name=:name')
+            ->setParameters([
+            'name' => $name
+        ])
+            ->getResult();
+    }
+
+    /**
+     *
+     * @param string $name
+     * @return array|Animal[]
+     */
+    public function findByName2(string $name)
+    {
+        $qb = $this->getBase($name);
+
+        $qb = $this->addDefaultOrderBy($qb);
+
+        $qb->andWhere('a.id > 5000');
+        // $qb->andWhere($qb->expr()->gt('a.id', '5000'));
+
+        /* Jointure droite.
+
+        DQL
+        '[...] FROM [...] INNER JOIN a.species s [...]'
+
+        QB
+        ->innerJoin('a.species', 's');
+         */
+
+        /*
+        (a+b).c
+        $qb->where('(a or b)');
+        $qb->andWhere('c');
+
+        (a+b).c
+        $qb->where($qb->expr()->orX('a', 'b'));
+        $qb->andWhere('c');
+
+        ----
+        a+b.c
+        $qb->where('a');
+        $qb->orWhere('b');
+        $qb->andWhere('c');
+        */
+
+        $qb->setMaxResults(5); // LIMIT 5.
+        $qb->setFirstResult(0); // OFFSET 0.
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
+     *
+     * @param string $name
+     * @return array|Animal[]
+     */
+    public function findBefore(string $name, \DateTime $date)
+    {
+        $qb = $this->getBase($name);
+
+        $qb->andWhere('a.startAt < :date')->setParameter('data', $date);
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
+     */
+    protected function getBase($name)
+    {
+        $qb = $this->createQueryBuilder('a');
+
+        $qb->andWhere('a.name=:name')->setParameter('name', $name);
+
+        return $qb;
+    }
+
+    /**
+     *
+     */
+    protected function addDefaultOrderBy(QueryBuilder $queryBuilder): QueryBuilder
+    {
+        $alias = $queryBuilder->getRootAliases()[0];
+
+        $queryBuilder->addOrderBy("$alias.name");
+        $queryBuilder->addOrderBy("$alias.startAt");
+    }
 }
+
+

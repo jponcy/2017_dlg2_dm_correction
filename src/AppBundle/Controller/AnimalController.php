@@ -6,6 +6,7 @@ use AppBundle\Entity\Animal;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component\HttpFoundation\Request;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Animal controller.
@@ -24,7 +25,7 @@ class AnimalController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $animals = $em->getRepository('AppBundle:Animal')->findAll();
+        $animals = new ArrayCollection($em->getRepository('AppBundle:Animal')->findByName2('toto'));
 
         return $this->render('animal/index.html.twig', array(
             'animals' => $animals,
