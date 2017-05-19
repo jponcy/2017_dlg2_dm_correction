@@ -4,3 +4,6 @@ sudo setfacl -R -m u:"$HTTPDUSER":rwX -m u:`whoami`:rwX app/cache app/logs
 sudo setfacl -dR -m u:"$HTTPDUSER":rwX -m u:`whoami`:rwX app/cache app/logs
 
 composer install
+
+php app/console doctrine:database:drop --force -q
+php app/console doctrine:database:create
