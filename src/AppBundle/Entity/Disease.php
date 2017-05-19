@@ -154,31 +154,11 @@ class Disease
     }
 
     /**
-     * Set the specie collection.
-     *
-     * @param Collection $species
-     *
-     * @return Disease
-     */
-    public function setSpecie(Collection $species)
-    {
-        if ($species) {
-            $this->species = $species;
-
-            foreach ($species as $specie) {
-                $specie->addDisease($this);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
      * Get the species.
      *
      * @return Collection
      */
-    public function getSpecie()
+    public function getSpecies()
     {
         return $this->species;
     }

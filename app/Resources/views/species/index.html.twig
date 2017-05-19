@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Species list</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for species in species %}
+            <tr>
+                <td><a href="{{ path('species_show', { 'id': species.id }) }}">{{ species.id }}</a></td>
+                <td>{{ species.name }}</td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('species_show', { 'id': species.id }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('species_edit', { 'id': species.id }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('species_new') }}">Create a new species</a>
+        </li>
+    </ul>
+{% endblock %}
